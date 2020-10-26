@@ -19,10 +19,26 @@ class Student
           name TEXT,
           grade INTEGER
         )
-        SQL 
+        SQL
+        
         DB[:conn].excute(sql)
-      end
-      
+  end
   
+  def save
+    sql == <<-SQL
+      INSERT INTO students(name, grade)
+      VALUES(?,?)
+    SQL
+    
+    DB[:conn].execute(sql, self.name, self.grade)
+    
+    @id = DB[:conn].excute("SELECT lat_insert_rowid() FROM songs")[0][0]
   
+  end
+  
+  def Student.create(name, grade)
+    student = Student.new(name, grade)
+    student.save
+    student
+  end
 end
